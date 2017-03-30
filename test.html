@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Actions</title>
+  <meta charset="utf-8">
+  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script>
+  /* global $ */
+  $(document).ready(function() {
+    'use strict';
+    $("#load").click( function () {
+      var msg = {
+        "messageType": "LOAD"
+      };
+      if($('#saveState').text() != "") {
+        msg.gameState = JSON.parse($('#saveState').text());
+        var gameframe = document.getElementById("gameIframe").contentWindow
+        gameframe.postMessage(msg, "*");
+      }
+    });
+
+    $(window).on('message', function(evt) {
+      var eventData = evt.originalEvent.data;
+      //Note that messages from all origins are accepted
+      if(eventData.messageType === "SCORE") {
+      //Get data from sent message
+        var data = eventData.score;
+      //Create a new list item based on the data
+        var newItem = '\n\t<li>' + (data || '') + '</li>';
+      //Add the item to the beginning of the actions list
+        $('#scores').prepend(newItem);
+      }
+      else if(eventData.messageType === "SAVE") {
+      //Get data from sent message
+        var data = eventData.gameState;
+
+        var stringData = JSON.stringify(data);
+      //Add the item to the beginning of the actions list
+        $('#saveState').text(stringData)
+      }
+      else if(eventData.messageType === "SETTING") {
+        console.log(eventData)
+        var data = eventData.options;
+        $('#gameIframe').height(data.height);
+        $('#gameIframe').width(data.width);
+      }
+    });
+  });
+  </script>
+</head>
+
+<body>
+  <iframe id="gameIframe" src="index.html" autofocus></iframe>
+  <ul id="scores">
+  </ul>
+  <p id="saveState"></p>
+  <button id="load">Load</button>
+</body>
+</html>
