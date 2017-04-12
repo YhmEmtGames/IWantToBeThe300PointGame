@@ -19,7 +19,7 @@ $(document).ready( function() {
         "height" : 680
       }
     };
-    window.parent.postMessage(msg, "*");
+    parent.postMessage(msg, "*");
 
     // Sends this game's state to the service.
     // The format of the game state is decided
@@ -32,6 +32,6 @@ $(document).ready( function() {
           "score": score
         }
       };
-      window.parent.postMessage(msg, "*");
+      parent.postMessage(msg, "*");
     });
 });
