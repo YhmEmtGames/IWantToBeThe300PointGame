@@ -1,5 +1,4 @@
 $(document).ready( function() {
-    "use strict";
 
   window.addEventListener("message", function(evt) {
     if(evt.data.messageType === "LOAD") {
